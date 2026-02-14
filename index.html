@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Для Алины ❤️</title>
+    <style>
+        /* Общие настройки для iPhone */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #fffafa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Экран 1: Конверт */
+        #envelope-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%; height: 100%;
+            background: #d92d3a;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .flap {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #e63946;
+            clip-path: polygon(0 0, 50% 60%, 100% 0);
+            z-index: 3;
+            transform-origin: top;
+            transition: transform 0.8s ease;
+        }
+
+        .envelope.open .flap {
+            transform: rotateX(180deg);
+        }
+
+        .pocket {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #f14d5a;
+            clip-path: polygon(0 100%, 50% 40%, 100% 100%);
+            z-index: 2;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .heart-seal {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -40%);
+            width: 60px; height: 60px;
+            background: white;
+            border-radius: 50%;
+            z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -40%) scale(1); }
+            50% { transform: translate(-50%, -40%) scale(1.1); }
+        }
+
+        /* Экран 2: Письмо (Широкое) */
+        #letter-screen {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+            background-color: #fffafa;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .paper {
+            background: #fdfbf7;
+            width: 100%;
+            max-width: 800px; /* Широкий лист бумаги */
+            margin: 40px auto;
+            padding: 50px 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            border-left: 10px solid #fecdd3;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .text {
+            font-family: Georgia, serif;
+            font-size: 1.4rem;
+            line-height: 1.7;
+            color: #2d2d2d;
+            font-style: italic;
+            white-space: pre-wrap;
+        }
+
+        .btn-surprise {
+            background: linear-gradient(45deg, #e11d48, #db2777);
+            color: white; border: none;
+            padding: 20px; border-radius: 50px;
+            font-weight: bold; font-size: 1.1rem;
+            width: 100%; margin-top: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(225,29,72,0.2);
+            text-transform: uppercase;
+        }
+
+        /* Экран 3: Финал */
+        #final-screen {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+            align-items: center; justify-content: center;
+            text-align: center;
+            background: white;
+        }
+
+        .big-heart {
+            font-size: 80px;
+            animation: beat 1s infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        h1 { color: #e11d48; font-size: 3rem; margin: 0; font-weight: 900; }
+        .q { color: #4c0519; font-size: 1.5rem; margin-top: 10px; font-weight: 300; }
+    </style>
+</head>
+<body>
+
+    <div id="envelope-screen">
+        <div style="color: #9f1239; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 50px; font-size: 1.2rem; font-weight: bold;">Для Алины</div>
+        <div class="envelope-wrapper" onclick="openEnvelope()">
+            <div class="envelope" id="env">
+                <div class="flap"></div>
+                <div class="pocket"></div>
+                <div class="heart-seal">❤️</div>
+            </div>
+        </div>
+        <p style="margin-top: 50px; color: #fda4af; font-weight: bold; letter-spacing: 2px;">НАЖМИ, ЧТОБЫ ОТКРЫТЬ</p>
+    </div>
+
+    <div id="letter-screen">
+        <div class="paper">
+            <div class="text">Дорогая Алина!
+
+Это праздничное утро — лишь красивое напоминание о том, как невероятно сильно ты для меня важна. Каждый миг рядом с тобой наполнен теплом, светом и тем особенным, тихим счастьем, которое ищешь всю жизнь. 
+
+Ты делаешь мой мир лучше просто тем, что ты есть, и я благодарен за каждый день, прожитый с тобой. 
+
+Алин, хочу, чтобы ты знала: ты — самое большое сокровище, которое я когда-либо находил. В твоих глазах я вижу своё будущее, полное радости, приключений и уюта. Я люблю твой смех, твои объятия и ту бесконечную нежность, которую ты мне даришь.
+
+Твой Максим.</div>
+            <button class="btn-surprise" onclick="showFinal()">ОТКРОЙ СЮРПРИЗ ✨</button>
+        </div>
+    </div>
+
+    <div id="final-screen">
+        <div class="big-heart">❤️</div>
+        <h1>Алина,</h1>
+        <p class="q">станешь моей Валентинкой?</p>
+        <button onclick="alert('Ура! ❤️')" style="margin-top: 40px; padding: 20px 60px; background: #e11d48; color: white; border: none; border-radius: 50px; font-weight: 900; font-size: 1.5rem;">ДА!</button>
+    </div>
+
+    <script>
+        function openEnvelope() {
+            document.getElementById('env').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('envelope-screen').style.display = 'none';
+                document.getElementById('letter-screen').style.display = 'flex';
+                window.scrollTo(0,0);
+            }, 1000);
+        }
+
+        function showFinal() {
+            document.getElementById('letter-screen').style.display = 'none';
+            document.getElementById('final-screen').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
+
