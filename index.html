@@ -4,33 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Для Алины ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@1,400;1,700&family=Montserrat:wght@300;600;900&display=swap" rel="stylesheet">
     <style>
-        /* Общие настройки для iPhone */
+        /* Базовые настройки для iPhone */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             background-color: #fffafa;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Постоянные падающие лепестки на фоне */
+        .petal {
+            position: fixed;
+            top: -10%;
+            z-index: 100;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
         }
 
         /* Экран 1: Конверт */
-        #envelope-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-            transition: opacity 0.5s ease;
+        #screen-env {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 100vh; text-align: center;
+            transition: opacity 0.8s ease;
         }
 
         .envelope-wrapper {
             position: relative;
-            width: 300px;
-            height: 200px;
-            perspective: 1000px;
+            width: 300px; height: 200px;
+            perspective: 1200px;
             cursor: pointer;
         }
 
@@ -38,44 +51,42 @@
             position: relative;
             width: 100%; height: 100%;
             background: #d92d3a;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 30px 60px rgba(225, 29, 72, 0.3);
         }
 
         .flap {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: #e63946;
-            clip-path: polygon(0 0, 50% 60%, 100% 0);
+            clip-path: polygon(0 0, 50% 65%, 100% 0);
             z-index: 3;
             transform-origin: top;
-            transition: transform 0.8s ease;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .envelope.open .flap {
-            transform: rotateX(180deg);
-        }
+        .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
 
         .pocket {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: #f14d5a;
-            clip-path: polygon(0 100%, 50% 40%, 100% 100%);
+            clip-path: polygon(0 100%, 50% 45%, 100% 100%);
             z-index: 2;
-            border-radius: 0 0 15px 15px;
+            border-radius: 0 0 20px 20px;
         }
 
-        .heart-seal {
+        .seal {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -40%);
-            width: 60px; height: 60px;
+            width: 70px; height: 70px;
             background: white;
             border-radius: 50%;
             z-index: 10;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            animation: pulse 1.5s infinite;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
@@ -83,12 +94,11 @@
             50% { transform: translate(-50%, -40%) scale(1.1); }
         }
 
-        /* Экран 2: Письмо (Широкое) */
-        #letter-screen {
+        /* Экран 2: Письмо */
+        #screen-letter {
             display: none;
             min-height: 100vh;
-            padding: 20px;
-            background-color: #fffafa;
+            padding: 40px 20px;
             flex-direction: column;
             align-items: center;
         }
@@ -96,115 +106,215 @@
         .paper {
             background: #fdfbf7;
             width: 100%;
-            max-width: 800px; /* Широкий лист бумаги */
-            margin: 40px auto;
-            padding: 50px 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-            border-left: 10px solid #fecdd3;
-            animation: slideUp 0.8s ease-out;
+            max-width: 850px;
+            padding: 70px 40px;
+            box-shadow: 0 20px 80px rgba(0,0,0,0.08);
+            border-left: 15px solid #fecdd3;
+            animation: slideIn 1s ease-out;
+            position: relative;
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
+        @keyframes slideIn {
+            from { transform: translateY(100px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
 
-        .text {
-            font-family: Georgia, serif;
-            font-size: 1.4rem;
+        .letter-content {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.7rem;
             line-height: 1.7;
             color: #2d2d2d;
             font-style: italic;
             white-space: pre-wrap;
         }
 
+        /* "Парящая" кнопка сюрприза */
         .btn-surprise {
-            background: linear-gradient(45deg, #e11d48, #db2777);
+            background: linear-gradient(45deg, #e11d48, #ff4d6d);
             color: white; border: none;
-            padding: 20px; border-radius: 50px;
-            font-weight: bold; font-size: 1.1rem;
-            width: 100%; margin-top: 50px;
+            padding: 22px 40px;
+            border-radius: 100px;
+            font-weight: 700; font-size: 1.3rem;
+            width: 100%; margin-top: 60px;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(225,29,72,0.2);
+            box-shadow: 0 15px 35px rgba(225,29,72,0.4);
             text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: floatBtn 3s ease-in-out infinite;
+            transition: all 0.3s ease;
         }
 
-        /* Экран 3: Финал */
-        #final-screen {
+        @keyframes floatBtn {
+            0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 15px 35px rgba(225,29,72,0.4); }
+            50% { transform: translateY(-10px) scale(1.02); box-shadow: 0 25px 50px rgba(225,29,72,0.5); }
+        }
+
+        /* Экран 3: Финальный вопрос */
+        #screen-final {
             display: none;
             height: 100vh;
             flex-direction: column;
             align-items: center; justify-content: center;
             text-align: center;
             background: white;
+            padding: 20px;
+            overflow: hidden;
         }
 
-        .big-heart {
-            font-size: 80px;
-            animation: beat 1s infinite;
-            margin-bottom: 20px;
+        .final-title { color: #e11d48; font-size: 4.5rem; margin: 0; font-weight: 900; }
+        
+        .btn-container {
+            margin-top: 60px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            position: relative;
         }
 
-        @keyframes beat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
+        .btn-yes {
+            padding: 20px 60px;
+            background: #e11d48;
+            color: white; border: none;
+            border-radius: 50px; font-size: 1.6rem; font-weight: 900;
+            box-shadow: 0 10px 25px rgba(225,29,72,0.3);
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.1s;
         }
 
-        h1 { color: #e11d48; font-size: 3rem; margin: 0; font-weight: 900; }
-        .q { color: #4c0519; font-size: 1.5rem; margin-top: 10px; font-weight: 300; }
+        .btn-yes:active { transform: scale(0.9); }
+
+        .btn-no {
+            padding: 20px 60px;
+            background: #f1f5f9;
+            color: #94a3b8; border: none;
+            border-radius: 50px; font-size: 1.6rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        /* Анимация праздничного взрыва (сердечки) */
+        .confetti-heart {
+            position: fixed;
+            font-size: 2.5rem;
+            pointer-events: none;
+            z-index: 200;
+            animation: heartBlast 2.5s ease-out forwards;
+        }
+
+        @keyframes heartBlast {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            100% { transform: translate(var(--tw-x), var(--tw-y)) scale(1.8) rotate(var(--tw-r)); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
-    <div id="envelope-screen">
-        <div style="color: #9f1239; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 50px; font-size: 1.2rem; font-weight: bold;">Для Алины</div>
+    <!-- ЭКРАН 1: КОНВЕРТ -->
+    <div id="screen-env">
+        <h2 style="color: #9f1239; letter-spacing: 0.5em; text-transform: uppercase; margin-bottom: 60px; font-weight: 300;">Для Алины</h2>
         <div class="envelope-wrapper" onclick="openEnvelope()">
             <div class="envelope" id="env">
                 <div class="flap"></div>
                 <div class="pocket"></div>
-                <div class="heart-seal">❤️</div>
+                <div class="seal">❤️</div>
             </div>
         </div>
-        <p style="margin-top: 50px; color: #fda4af; font-weight: bold; letter-spacing: 2px;">НАЖМИ, ЧТОБЫ ОТКРЫТЬ</p>
+        <p style="margin-top: 60px; color: #fda4af; font-weight: bold; letter-spacing: 3px; text-transform: uppercase; font-size: 0.8rem;">Нажми, чтобы открыть</p>
     </div>
 
-    <div id="letter-screen">
+    <!-- ЭКРАН 2: ПИСЬМО -->
+    <div id="screen-letter">
         <div class="paper">
-            <div class="text">Дорогая Алина!
+            <div class="letter-content">Дорогая Алина!
 
 Это праздничное утро — лишь красивое напоминание о том, как невероятно сильно ты для меня важна. Каждый миг рядом с тобой наполнен теплом, светом и тем особенным, тихим счастьем, которое ищешь всю жизнь. 
 
 Ты делаешь мой мир лучше просто тем, что ты есть, и я благодарен за каждый день, прожитый с тобой. 
 
-Алин, хочу, чтобы ты знала: ты — самое большое сокровище, которое я когда-либо находил. В твоих глазах я вижу своё будущее, полное радости, приключений и уюта. Я люблю твой смех, твои объятия и ту бесконечную нежность, которую ты мне даришь.
+Солнце, хочу, чтобы ты знала: ты — самое большое сокровище, которое я когда-либо находил. В твоих глазах я вижу своё будущее, полное радости, приключений и уюта. Я люблю твой смех, твои объятия и ту бесконечную нежность, которую ты мне даришь.
 
 Твой Максим.</div>
-            <button class="btn-surprise" onclick="showFinal()">ОТКРОЙ СЮРПРИЗ ✨</button>
+            <button class="btn-surprise" onclick="showFinal()">Открыть сюрприз ✨</button>
+        </div>
+        <div style="height: 50px;"></div>
+    </div>
+
+    <!-- ЭКРАН 3: ВОПРОС -->
+    <div id="screen-final">
+        <div style="font-size: 80px; margin-bottom: 20px; animation: pulse 2s infinite;">💝</div>
+        <h1 class="final-title">Алина,</h1>
+        <p style="color: #4c0519; font-size: 1.8rem; font-weight: 300;">станешь моей Валентинкой?</p>
+        
+        <div class="btn-container" id="btn-container">
+            <button class="btn-yes" id="yes-btn" onclick="celebrate()">ДА!</button>
+            <button id="no-btn" class="btn-no" onmouseover="moveNo()" onclick="moveNo()">НЕТ</button>
         </div>
     </div>
 
-    <div id="final-screen">
-        <div class="big-heart">❤️</div>
-        <h1>Алина,</h1>
-        <p class="q">станешь моей Валентинкой?</p>
-        <button onclick="alert('Ура! ❤️')" style="margin-top: 40px; padding: 20px 60px; background: #e11d48; color: white; border: none; border-radius: 50px; font-weight: 900; font-size: 1.5rem;">ДА!</button>
-    </div>
-
     <script>
+        // Генерация падающего декора
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.innerHTML = Math.random() > 0.5 ? '🌸' : '❤️';
+            petal.className = 'petal';
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.fontSize = Math.random() * 20 + 10 + 'px';
+            petal.style.animationDuration = Math.random() * 3 + 4 + 's';
+            petal.style.opacity = Math.random() * 0.5 + 0.5;
+            document.body.appendChild(petal);
+            setTimeout(() => petal.remove(), 6000);
+        }
+        setInterval(createPetal, 400);
+
         function openEnvelope() {
             document.getElementById('env').classList.add('open');
             setTimeout(() => {
-                document.getElementById('envelope-screen').style.display = 'none';
-                document.getElementById('letter-screen').style.display = 'flex';
-                window.scrollTo(0,0);
+                document.getElementById('screen-env').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('screen-env').style.display = 'none';
+                    document.getElementById('screen-letter').style.display = 'flex';
+                    window.scrollTo(0, 0);
+                }, 600);
             }, 1000);
         }
 
         function showFinal() {
-            document.getElementById('letter-screen').style.display = 'none';
-            document.getElementById('final-screen').style.display = 'flex';
+            document.getElementById('screen-letter').style.display = 'none';
+            document.getElementById('screen-final').style.display = 'flex';
+        }
+
+        function moveNo() {
+            const btn = document.getElementById('no-btn');
+            btn.style.position = 'fixed';
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+        }
+
+        function celebrate() {
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'confetti-heart';
+                    heart.innerHTML = ['❤️', '💖', '💝', '🌸', '🌹', '✨', '💎'][Math.floor(Math.random() * 7)];
+                    heart.style.left = '50%';
+                    heart.style.top = '50%';
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * 120 + 30;
+                    heart.style.setProperty('--tw-x', (Math.cos(angle) * distance) + 'vw');
+                    heart.style.setProperty('--tw-y', (Math.sin(angle) * distance) + 'vh');
+                    heart.style.setProperty('--tw-r', Math.random() * 720 + 'deg');
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 2500);
+                }, i * 20);
+            }
         }
     </script>
 </body>
 </html>
+
 
